@@ -23,7 +23,7 @@ To use add the params to your Pad URL IE
 
 http://beta.etherpad.org/p/test?theme=blackAndWhite
 
-![Alt text](http://i.imgur.com/TYO8qeh.png)
+![Alt text](http://i.imgur.com/ktoSFGh.png)
 
 # CONTRIBUTING
 See themes.js, use github.
