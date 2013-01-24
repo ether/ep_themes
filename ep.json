@@ -2,12 +2,8 @@
     "parts": [
         {
             "name": "ep_themes",
-            "hooks": {
-                "eejsBlock_timesliderBody": "ep_themes/index",
-                "eejsBlock_body": "ep_themes/index"
-            }, 
             "client_hooks":{
-                "postAceInit": "ep_themes/static/js/themes:postAceInit"
+                "aceInitialized": "ep_themes/static/js/themes:themes"
             }
         }
     ]

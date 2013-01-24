@@ -1,7 +1,7 @@
 {
   "name": "ep_themes",
-  "version": "0.0.1",
-  "description": "Change the colors of different parts of Etherpad Lite",
+  "version": "0.0.2",
+  "description": "Change the themes, styles & colors of different parts of Etherpad Lite",
   "author": {
     "name": "John McLear",
     "email": "john@mclear.co.uk",
