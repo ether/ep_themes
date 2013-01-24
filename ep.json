@@ -3,7 +3,7 @@
         {
             "name": "ep_themes",
             "client_hooks":{
-                "aceInitialized": "ep_themes/static/js/themes:themes"
+                "aceInitialized": "ep_themes/static/js/themes:themesFn"
             }
         }
     ]

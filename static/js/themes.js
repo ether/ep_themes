@@ -1,4 +1,4 @@
-exports.themes = function(hook, context){
+exports.themesFn = function(hook, context){
 
   if(!exports){
     var exports = {};
