@@ -1,3 +1,5 @@
+var padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+
 exports.themesFn = function(hook, context){
 
   if(!exports){
@@ -14,15 +16,29 @@ exports.themesFn = function(hook, context){
       var sidebar   = themes.getUrlVars()['sidebar'];
       var sidebarBg = themes.getUrlVars()['sidebarBg'];
 
+
       if(!theme){
-        /* Set default theme if it exists */
-        if (clientVars.theme_default) {
-          theme = clientVars.theme_default;
+        /* Set theme from cookie if it exists */
+        if (padcookie.getPref('themeName')) {
+          theme = padcookie.getPref('themeName');
+        } else {
+          /* Set default theme if it exists */
+          if (clientVars.theme_default) {
+            theme = clientVars.theme_default;
+          }
         }
       }
 
       /* Themes config -- add more themes here*/
       if(theme){
+        if(theme == "normal"){
+          themes.setBgColor("#FFF");
+          themes.setFontColor("#000");
+          themes.setToolbarColor("#F7F7F7");
+          themes.setSideBarBgColor("#F7F7F7");
+          themes.setSideBarFontColor("#888");
+        }
+
         if(theme == "hack"){
           themes.setBgColor("#000");
           themes.setFontColor("#07C201");
@@ -37,6 +53,7 @@ exports.themesFn = function(hook, context){
           themes.setSideBarBgColor("#000");
           themes.setSideBarFontColor("#FFF");
         }
+        padcookie.setPref('themeName', theme);
       }
 
       if(font){
@@ -95,3 +112,9 @@ exports.themesFn = function(hook, context){
   }
   exports.themes.init();
 }
+exports.postAceInit = function(hook_name, args, cb){
+  if (padcookie.getPref('themeName')) {
+    $('#themesmenu').val(padcookie.getPref('themeName'));
+  }
+  return cb();
+};

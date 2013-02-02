@@ -1,6 +1,5 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
 var settings = require('ep_etherpad-lite/node/utils/Settings');
-
 //console.log("WWUUU");
 
 /*
@@ -23,16 +22,17 @@ exports.eejsBlock_timesliderStyles = function (hook_name, args, cb) {
 exports.eejsBlock_timesliderBody = function (hook_name, args, cb) {
   args.content = args.content + "<script>"+eejs.require("ep_themes/static/js/themes.js") + "</script>";
   return cb();
-}
+};
 
 exports.eejsBlock_body = function (hook_name, args, cb) {
   args.content = args.content + eejs.require("ep_themes/templates/scripts.ejs");
   return cb();
-}
+};
 
-exports.postAceInit = function(one, two){
+exports.eejsBlock_mySettings_dropdowns = function(hook_name, args, cb){
+  args.content = args.content + eejs.require("ep_themes/templates/themesMenu.ejs");
   return cb();
-}
+};
 
 exports.clientVars = function(hook, context, callback){
   var defaultTheme;

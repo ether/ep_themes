@@ -3,10 +3,12 @@
         {
             "name": "ep_themes",
             "client_hooks":{
-                "aceInitialized": "ep_themes/static/js/themes:themesFn"
+                "aceInitialized": "ep_themes/static/js/themes:themesFn",
+                "postAceInit": "ep_themes/static/js/themes:postAceInit"
             },
             "hooks":{
-            	"clientVars":"ep_themes/index:clientVars"
+            	"clientVars":"ep_themes/index:clientVars",
+            	"eejsBlock_mySettings.dropdowns":"ep_themes/index:eejsBlock_mySettings_dropdowns"
             }
         }
     ]

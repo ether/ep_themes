@@ -1,6 +1,8 @@
-# Change the styling of a pad by passing a theme or styles in the URL as paramters
+# Change the styling of a pad
 
 # Available Themes:
+
+* normal
 
 * hack
 
@@ -38,7 +40,3 @@ The following can optionally be added to your settings.json:
       "default_theme": "hack"  
     } 
 
-# TODO
-
-* In UI setting to change Styles
-* Use Cookies to save style settings
