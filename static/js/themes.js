@@ -49,10 +49,10 @@ exports.themesFn = function(hook, context){
         themes.setToolbarColor(toolbar);
       }
       if(sidebar){
-        themes.setSideBarBgColor(sidebar);
+        themes.setSideBarFontColor(sidebar);
       }
       if(sidebarBg){
-        themes.setSideBarFontColor(sidebarBg);
+        themes.setSideBarBgColor(sidebarBg);
       }
 
     },
