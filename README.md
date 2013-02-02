@@ -3,13 +3,9 @@
 # Available Themes:
 
 * normal
-
 * terminal
-
 * hacker
-
 * cybergal
-
 * monokai
 
 Available Params
@@ -41,6 +37,6 @@ Requires Etherpad lite >= version 1.2.5
 The following can optionally be added to your settings.json:  
 
     "ep_themes":{  
-      "default_theme": "hack"  
+      "default_theme": "hacker"  
     } 
 
