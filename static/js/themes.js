@@ -14,6 +14,13 @@ exports.themesFn = function(hook, context){
       var sidebar   = themes.getUrlVars()['sidebar'];
       var sidebarBg = themes.getUrlVars()['sidebarBg'];
 
+      if(!theme){
+        /* Set default theme if it exists */
+        if (clientVars.theme_default) {
+          theme = clientVars.theme_default;
+        }
+      }
+
       /* Themes config -- add more themes here*/
       if(theme){
         if(theme == "hack"){

@@ -31,8 +31,14 @@ See themes.js, use github.
 # INSTALL
 Install via the /admin/plugins UI in Etherpad Lite.
 
+Requires Etherpad lite >= version 1.2.5
+The following can optionally be added to your settings.json:  
+
+    "ep_themes":{  
+      "default_theme": "hack"  
+    } 
+
 # TODO
 
 * In UI setting to change Styles
-* EP Setting to set a theme by default
 * Use Cookies to save style settings

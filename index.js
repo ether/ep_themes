@@ -1,5 +1,7 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
-console.log("WWUUU");
+var settings = require('ep_etherpad-lite/node/utils/Settings');
+
+//console.log("WWUUU");
 
 /*
 exports.eejsBlock_timesliderEditbarRight = function (hook_name, args, cb) { 
@@ -31,3 +33,16 @@ exports.eejsBlock_body = function (hook_name, args, cb) {
 exports.postAceInit = function(one, two){
   return cb();
 }
+
+exports.clientVars = function(hook, context, callback){
+  var defaultTheme;
+  try {
+    if (settings.ep_themes.default_theme){
+        defaultTheme = settings.ep_themes.default_theme;
+    }
+  } catch (e){
+    console.warn("ep_themes: a default theme can be set in settings.json");
+    defaultTheme = "";
+  }
+  return callback({ "theme_default": defaultTheme });
+};
