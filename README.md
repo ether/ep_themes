@@ -1,14 +1,16 @@
-# Change the styling of a pad by passing a theme or styles in the URL as paramters
+# Change the styling of a pad
 
 # Available Themes:
 
-* hack
-
-* blackAndWhite
+* normal
+* terminal
+* hacker
+* cybergal
+* monokai
 
 Available Params
 ```
-theme     = Name of the theme IE hack or blackAndWhite
+theme     = Name of the theme IE hacker or terminal
 font      = Pad font color
 bg        = Pad Background Color 
 toolbar   = Toolbar Background color
@@ -19,9 +21,9 @@ sidebarBg = Sidebar Background color
 # USAGE
 To use add the params to your Pad URL IE
 
-?theme=blackAndWhite
+?theme=terminal
 
-http://beta.etherpad.org/p/test?theme=blackAndWhite
+http://beta.etherpad.org/p/test?theme=terminal
 
 ![Alt text](http://i.imgur.com/ktoSFGh.png)
 
@@ -31,8 +33,10 @@ See themes.js, use github.
 # INSTALL
 Install via the /admin/plugins UI in Etherpad Lite.
 
-# TODO
+Requires Etherpad lite >= version 1.2.5  
+The following can optionally be added to your settings.json:  
 
-* In UI setting to change Styles
-* EP Setting to set a theme by default
-* Use Cookies to save style settings
+    "ep_themes":{  
+      "default_theme": "hacker"  
+    } 
+

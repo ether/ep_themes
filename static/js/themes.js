@@ -1,3 +1,5 @@
+var padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+
 exports.themesFn = function(hook, context){
 
   if(!exports){
@@ -14,22 +16,58 @@ exports.themesFn = function(hook, context){
       var sidebar   = themes.getUrlVars()['sidebar'];
       var sidebarBg = themes.getUrlVars()['sidebarBg'];
 
+
+      if(!theme){
+        /* Set theme from cookie if it exists */
+        if (padcookie.getPref('themeName')) {
+          theme = padcookie.getPref('themeName');
+        } else {
+          /* Set default theme if it exists */
+          if (clientVars.theme_default) {
+            theme = clientVars.theme_default;
+          }
+        }
+      }
+
       /* Themes config -- add more themes here*/
       if(theme){
-        if(theme == "hack"){
+        if(theme == "normal"){
+          themes.setBgColor("#FFF");
+          themes.setFontColor("#000");
+          themes.setToolbarColor("#F7F7F7");
+          themes.setSideBarBgColor("#F7F7F7");
+          themes.setSideBarFontColor("#888");
+        }
+
+        if(theme == "hacker"){
           themes.setBgColor("#000");
           themes.setFontColor("#07C201");
           themes.setToolbarColor("#000");
           themes.setSideBarBgColor("#000");
           themes.setSideBarFontColor("#07C201");
         }
-        if(theme == "blackAndWhite"){
+        if(theme == "terminal"){
           themes.setBgColor("#000");
           themes.setFontColor("#FFF");
           themes.setToolbarColor("#000");
           themes.setSideBarBgColor("#000");
           themes.setSideBarFontColor("#FFF");
         }
+        if(theme == "cybergal"){
+          themes.setBgColor("#000");
+          themes.setFontColor("#FF1493");
+          themes.setToolbarColor("#000");
+          themes.setSideBarBgColor("#000");
+          themes.setSideBarFontColor("#FF1493");
+        }
+        if(theme == "monokai"){
+          themes.setBgColor("#272822");
+          themes.setFontColor("#FFF");
+          themes.setToolbarColor("#272822");
+          themes.setSideBarBgColor("#272822");
+          themes.setSideBarFontColor("#FFF");
+        }
+        padcookie.setPref('themeName', theme);
       }
 
       if(font){
@@ -42,10 +80,10 @@ exports.themesFn = function(hook, context){
         themes.setToolbarColor(toolbar);
       }
       if(sidebar){
-        themes.setSideBarBgColor(sidebar);
+        themes.setSideBarFontColor(sidebar);
       }
       if(sidebarBg){
-        themes.setSideBarFontColor(sidebarBg);
+        themes.setSideBarBgColor(sidebarBg);
       }
 
     },
@@ -88,3 +126,9 @@ exports.themesFn = function(hook, context){
   }
   exports.themes.init();
 }
+exports.postAceInit = function(hook_name, args, cb){
+  if (padcookie.getPref('themeName')) {
+    $('#themesmenu').val(padcookie.getPref('themeName'));
+  }
+  return cb();
+};

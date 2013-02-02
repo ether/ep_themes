@@ -1,15 +1,23 @@
 {
   "name": "ep_themes",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Change the themes, styles & colors of different parts of Etherpad Lite",
   "author": {
     "name": "John McLear",
     "email": "john@mclear.co.uk",
     "url": "http://mclear.co.uk"
   },
+  "contributors": [
+    {
+      "name": "Luke Williams",
+      "email": "xocel@iquidus.org"
+    }
+  ],
   "engines": {
     "node": ">= 0.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ep_etherpad-lite": ">= 1.2.5"
+  },
   "readmeFilename": "README.md"
 }
