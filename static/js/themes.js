@@ -39,18 +39,32 @@ exports.themesFn = function(hook, context){
           themes.setSideBarFontColor("#888");
         }
 
-        if(theme == "hack"){
+        if(theme == "hacker"){
           themes.setBgColor("#000");
           themes.setFontColor("#07C201");
           themes.setToolbarColor("#000");
           themes.setSideBarBgColor("#000");
           themes.setSideBarFontColor("#07C201");
         }
-        if(theme == "blackAndWhite"){
+        if(theme == "terminal"){
           themes.setBgColor("#000");
           themes.setFontColor("#FFF");
           themes.setToolbarColor("#000");
           themes.setSideBarBgColor("#000");
+          themes.setSideBarFontColor("#FFF");
+        }
+        if(theme == "cybergal"){
+          themes.setBgColor("#000");
+          themes.setFontColor("#FF1493");
+          themes.setToolbarColor("#000");
+          themes.setSideBarBgColor("#000");
+          themes.setSideBarFontColor("#FF1493");
+        }
+        if(theme == "monokai"){
+          themes.setBgColor("#272822");
+          themes.setFontColor("#FFF");
+          themes.setToolbarColor("#272822");
+          themes.setSideBarBgColor("#272822");
           themes.setSideBarFontColor("#FFF");
         }
         padcookie.setPref('themeName', theme);

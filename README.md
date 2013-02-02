@@ -4,13 +4,17 @@
 
 * normal
 
-* hack
+* terminal
 
-* blackAndWhite
+* hacker
+
+* cybergal
+
+* monokai
 
 Available Params
 ```
-theme     = Name of the theme IE hack or blackAndWhite
+theme     = Name of the theme IE hacker or terminal
 font      = Pad font color
 bg        = Pad Background Color 
 toolbar   = Toolbar Background color
@@ -21,9 +25,9 @@ sidebarBg = Sidebar Background color
 # USAGE
 To use add the params to your Pad URL IE
 
-?theme=blackAndWhite
+?theme=terminal
 
-http://beta.etherpad.org/p/test?theme=blackAndWhite
+http://beta.etherpad.org/p/test?theme=terminal
 
 ![Alt text](http://i.imgur.com/ktoSFGh.png)
 
@@ -33,7 +37,7 @@ See themes.js, use github.
 # INSTALL
 Install via the /admin/plugins UI in Etherpad Lite.
 
-Requires Etherpad lite >= version 1.2.5
+Requires Etherpad lite >= version 1.2.5  
 The following can optionally be added to your settings.json:  
 
     "ep_themes":{  
