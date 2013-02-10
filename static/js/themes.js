@@ -89,11 +89,11 @@ exports.themesFn = function(hook, context){
     },
 
     setBgColor: function(color){
-      $('iframe.[name="ace_outer"]').contents().find("#outerdocbody").css("background-color",color);
+      $('iframe[name="ace_outer"]').contents().find("#outerdocbody").css("background-color",color);
     },
 
     setFontColor: function(color){
-      $('iframe.[name="ace_outer"]').contents().find('iframe').contents().find("#innerdocbody").css("color",color);
+      $('iframe[name="ace_outer"]').contents().find('iframe').contents().find("#innerdocbody").css("color",color);
     },
 
     setToolbarColor: function(color){
@@ -102,12 +102,12 @@ exports.themesFn = function(hook, context){
     },
 
     setSideBarBgColor: function(color){
-      $('iframe.[name="ace_outer"]').contents().find('#sidediv').css("background",color);
-      $('iframe.[name="ace_outer"]').contents().find('#sidediv').css("background-color",color);
+      $('iframe[name="ace_outer"]').contents().find('#sidediv').css("background",color);
+      $('iframe[name="ace_outer"]').contents().find('#sidediv').css("background-color",color);
     },
 
     setSideBarFontColor: function(color){
-      $('iframe.[name="ace_outer"]').contents().find('#sidedivinner').attr('style', 'color: '+color +' !important');
+      $('iframe[name="ace_outer"]').contents().find('#sidedivinner').attr('style', 'color: '+color +' !important');
     },
 
   
