@@ -3,11 +3,11 @@
         {
             "name": "ep_themes",
             "client_hooks":{
-                "aceInitialized": "ep_themes/static/js/themes:themesFn",
-                "postAceInit": "ep_themes/static/js/themes:postAceInit"
+                "aceInitialized": "ep_themes/static/js/init"
             },
             "hooks":{
             	"clientVars":"ep_themes/index:clientVars",
+                "eejsBlock_scripts":"ep_themes/index:eejsBlock_scripts",
             	"eejsBlock_mySettings.dropdowns":"ep_themes/index:eejsBlock_mySettings_dropdowns"
             }
         }

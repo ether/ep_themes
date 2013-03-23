@@ -3,7 +3,7 @@
         <label for="themesmenu">Theme:</label>
     </td>
     <td>
-        <select id="themesmenu" onchange="require('ep_etherpad-lite/static/js/pad_cookie').padcookie.setPref('themeName', this.options[this.selectedIndex].value); window.location.reload()">
+        <select id="themesmenu" onchange="require('ep_etherpad-lite/static/js/pad_cookie').padcookie.setPref('themeName', this.options[this.selectedIndex].value);themes.init();">
         <option value="normal">Normal</option>
         <option value="terminal">Terminal</option>
         <option value="hacker">Hacker</option>
