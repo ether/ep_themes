@@ -80,6 +80,7 @@ var themes = {
 
   setBgColor: function(color){
     $('iframe[name="ace_outer"]').contents().find("#outerdocbody").css("background-color",color);
+    $('#editorcontainer').css("background-color",color);
   },
 
   setFontColor: function(color){
