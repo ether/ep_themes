@@ -30,7 +30,14 @@ var themes = {
         themes.setSideBarBgColor("#F7F7F7");
         themes.setSideBarFontColor("#888");
       }
-       if(theme == "hacker"){
+      if(theme == "highcontrast"){
+        themes.setBgColor("#000");
+        themes.setFontColor("#fff");
+        themes.setToolbarColor("#000");
+        themes.setSideBarBgColor("#000");
+        themes.setSideBarFontColor("#fff");
+      }
+      if(theme == "hacker"){
         themes.setBgColor("#000");
         themes.setFontColor("#07C201");
         themes.setToolbarColor("#000");
