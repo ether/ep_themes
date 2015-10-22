@@ -86,12 +86,12 @@ var themes = {
   },
 
   setBgColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find("#outerdocbody").css("background-color",color);
-    $('#editorcontainer').css("background-color",color);
+    $('iframe[name="ace_outer"]').contents().find(".outerdocbody").css("background-color",color);
+    $('.editorcontainer').css("background-color",color);
   },
 
   setFontColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find("#innerdocbody").css("color",color);
+    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find(".innerdocbody").css("color",color);
     $('.buttonicon').css("color", color);
     $('.toolbar ul li a').css("border-color", color);
     $('.toolbar').css("border-bottom-color", color);
@@ -104,12 +104,12 @@ var themes = {
   },
 
   setSideBarBgColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('#sidediv').css("background",color);
-    $('iframe[name="ace_outer"]').contents().find('#sidediv').css("background-color",color);
+    $('iframe[name="ace_outer"]').contents().find('.sidediv').css("background",color);
+    $('iframe[name="ace_outer"]').contents().find('.sidediv').css("background-color",color);
   },
 
   setSideBarFontColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('#sidedivinner').attr('style', 'color: '+color +' !important');
+    $('iframe[name="ace_outer"]').contents().find('.sidedivinner').attr('style', 'color: '+color +' !important');
   },
 
   // Read a page's GET URL variables and return them as an associative array.
