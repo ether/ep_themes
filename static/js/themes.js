@@ -92,9 +92,13 @@ var themes = {
 
   setFontColor: function(color){
     $('iframe[name="ace_outer"]').contents().find('iframe').contents().find("#innerdocbody").css("color",color);
+    $('.buttonicon').css("color", color);
+    $('.toolbar ul li a').css("border-color", color);
+    $('.toolbar').css("border-bottom-color", color);
   },
 
   setToolbarColor: function(color){
+    $('.toolbar ul li a').css("background", color);
     $('.toolbar').css("background",color);
     $('.toolbar').css("background-color",color);
   },
