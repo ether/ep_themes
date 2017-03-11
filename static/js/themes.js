@@ -86,6 +86,7 @@ var themes = {
   },
 
   setBgColor: function(color){
+    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find(".innerdocbody").css("background-color",color);
     $('iframe[name="ace_outer"]').contents().find(".outerdocbody").css("background-color",color);
     $('.editorcontainer').css("background-color",color);
   },
