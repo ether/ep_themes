@@ -1,6 +1,6 @@
 {
   "name": "ep_themes",
-  "version": "0.0.94",
+  "version": "0.0.95",
   "description": "Change the themes, styles & colors of different parts of Etherpad Lite",
   "author": {
     "name": "John McLear",
@@ -16,9 +16,9 @@
   "engines": {
     "node": ">= 0.6.0"
   },
-  "repository" : {
-    "type" : "git",
-    "url"  : "https://github.com/JohnMcLear/ep_themes.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JohnMcLear/ep_themes.git"
   },
   "readmeFilename": "README.md"
 }
