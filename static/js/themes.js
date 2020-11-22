@@ -1,15 +1,15 @@
 var themes = {
-  init: function() {
-    var theme     = themes.getUrlVars()['theme'];
-    var font      = themes.getUrlVars()['font'];
-    var bg        = themes.getUrlVars()['bg'];
-    var toolbar   = themes.getUrlVars()['toolbar'];
-    var sidebar   = themes.getUrlVars()['sidebar'];
-    var sidebarBg = themes.getUrlVars()['sidebarBg'];
+  init() {
+    let theme = themes.getUrlVars().theme;
+    const font = themes.getUrlVars().font;
+    const bg = themes.getUrlVars().bg;
+    const toolbar = themes.getUrlVars().toolbar;
+    const sidebar = themes.getUrlVars().sidebar;
+    const sidebarBg = themes.getUrlVars().sidebarBg;
 
-    var padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
 
-    if(!theme){
+    if (!theme) {
       /* Set theme from cookie if it exists */
       if (padcookie.getPref('themeName')) {
         theme = padcookie.getPref('themeName');
@@ -22,107 +22,106 @@ var themes = {
     }
 
     /* Themes config -- add more themes here*/
-    if(theme){
-      if(theme == "normal"){
-        themes.setBgColor("#FFF");
-        themes.setFontColor("#000");
-        themes.setToolbarColor("#F7F7F7");
-        themes.setSideBarBgColor("#F7F7F7");
-        themes.setSideBarFontColor("#888");
+    if (theme) {
+      if (theme == 'normal') {
+        themes.setBgColor('#FFF');
+        themes.setFontColor('#000');
+        themes.setToolbarColor('#F7F7F7');
+        themes.setSideBarBgColor('#F7F7F7');
+        themes.setSideBarFontColor('#888');
       }
-      if(theme == "highcontrast"){
-        themes.setBgColor("#000");
-        themes.setFontColor("#fff");
-        themes.setToolbarColor("#000");
-        themes.setSideBarBgColor("#000");
-        themes.setSideBarFontColor("#fff");
+      if (theme == 'highcontrast') {
+        themes.setBgColor('#000');
+        themes.setFontColor('#fff');
+        themes.setToolbarColor('#000');
+        themes.setSideBarBgColor('#000');
+        themes.setSideBarFontColor('#fff');
       }
-      if(theme == "hacker"){
-        themes.setBgColor("#000");
-        themes.setFontColor("#07C201");
-        themes.setToolbarColor("#000");
-        themes.setSideBarBgColor("#000");
-        themes.setSideBarFontColor("#07C201");
+      if (theme == 'hacker') {
+        themes.setBgColor('#000');
+        themes.setFontColor('#07C201');
+        themes.setToolbarColor('#000');
+        themes.setSideBarBgColor('#000');
+        themes.setSideBarFontColor('#07C201');
       }
-      if(theme == "terminal"){
-        themes.setBgColor("#000");
-        themes.setFontColor("#FFF");
-        themes.setToolbarColor("#000");
-        themes.setSideBarBgColor("#000");
-        themes.setSideBarFontColor("#FFF");
+      if (theme == 'terminal') {
+        themes.setBgColor('#000');
+        themes.setFontColor('#FFF');
+        themes.setToolbarColor('#000');
+        themes.setSideBarBgColor('#000');
+        themes.setSideBarFontColor('#FFF');
       }
-      if(theme == "cybergal"){
-        themes.setBgColor("#000");
-        themes.setFontColor("#FF1493");
-        themes.setToolbarColor("#000");
-        themes.setSideBarBgColor("#000");
-        themes.setSideBarFontColor("#FF1493");
+      if (theme == 'cybergal') {
+        themes.setBgColor('#000');
+        themes.setFontColor('#FF1493');
+        themes.setToolbarColor('#000');
+        themes.setSideBarBgColor('#000');
+        themes.setSideBarFontColor('#FF1493');
       }
-      if(theme == "monokai"){
-        themes.setBgColor("#272822");
-        themes.setFontColor("#FFF");
-        themes.setToolbarColor("#272822");
-        themes.setSideBarBgColor("#272822");
-        themes.setSideBarFontColor("#FFF");
+      if (theme == 'monokai') {
+        themes.setBgColor('#272822');
+        themes.setFontColor('#FFF');
+        themes.setToolbarColor('#272822');
+        themes.setSideBarBgColor('#272822');
+        themes.setSideBarFontColor('#FFF');
       }
       padcookie.setPref('themeName', theme);
     }
-    if(font){
+    if (font) {
       themes.setFontColor(font);
     }
-    if(bg){
+    if (bg) {
       themes.setBgColor(bg);
     }
-    if(toolbar){
+    if (toolbar) {
       themes.setToolbarColor(toolbar);
     }
-    if(sidebar){
+    if (sidebar) {
       themes.setSideBarFontColor(sidebar);
     }
-    if(sidebarBg){
+    if (sidebarBg) {
       themes.setSideBarBgColor(sidebarBg);
     }
-
   },
 
-  setBgColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find(".innerdocbody").css("background-color",color);
-    $('iframe[name="ace_outer"]').contents().find(".outerdocbody").css("background-color",color);
-    $('.editorcontainer').css("background-color",color);
+  setBgColor(color) {
+    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find('.innerdocbody').css('background-color', color);
+    $('iframe[name="ace_outer"]').contents().find('.outerdocbody').css('background-color', color);
+    $('.editorcontainer').css('background-color', color);
   },
 
-  setFontColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find(".innerdocbody").css("color",color);
-    $('.buttonicon').css("color", color);
-    $('.toolbar ul li a').css("border-color", color);
-    $('.toolbar').css("border-bottom-color", color);
+  setFontColor(color) {
+    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find('.innerdocbody').css('color', color);
+    $('.buttonicon').css('color', color);
+    $('.toolbar ul li a').css('border-color', color);
+    $('.toolbar').css('border-bottom-color', color);
   },
 
-  setToolbarColor: function(color){
-    $('.toolbar ul li a').css("background", color);
-    $('.toolbar').css("background",color);
-    $('.toolbar').css("background-color",color);
+  setToolbarColor(color) {
+    $('.toolbar ul li a').css('background', color);
+    $('.toolbar').css('background', color);
+    $('.toolbar').css('background-color', color);
   },
 
-  setSideBarBgColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('.sidediv').css("background",color);
-    $('iframe[name="ace_outer"]').contents().find('.sidediv').css("background-color",color);
+  setSideBarBgColor(color) {
+    $('iframe[name="ace_outer"]').contents().find('.sidediv').css('background', color);
+    $('iframe[name="ace_outer"]').contents().find('.sidediv').css('background-color', color);
   },
 
-  setSideBarFontColor: function(color){
-    $('iframe[name="ace_outer"]').contents().find('.sidedivinner').attr('style', 'color: '+color +' !important');
+  setSideBarFontColor(color) {
+    $('iframe[name="ace_outer"]').contents().find('.sidedivinner').attr('style', `color: ${color} !important`);
   },
 
   // Read a page's GET URL variables and return them as an associative array.
-  getUrlVars: function() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
+  getUrlVars() {
+    const vars = []; let
+      hash;
+    const hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split('=');
       vars.push(hash[0]);
       vars[hash[0]] = hash[1];
     }
     return vars;
-  }
-}
+  },
+};

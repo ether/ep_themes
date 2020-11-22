@@ -1,3 +1,3 @@
-exports.aceInitialized = function(hook, context){
+exports.aceInitialized = function (hook, context) {
   themes.init();
-}
+};
