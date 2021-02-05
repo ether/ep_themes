@@ -19,8 +19,6 @@ To use add the params to your Pad URL IE
 
 ``?theme=terminal``
 
-http://beta.etherpad.org/p/test?theme=terminal
-
 ![Screenshot](https://user-images.githubusercontent.com/220864/107029089-61ebaf80-67a6-11eb-8802-382e7588a10f.PNG)
 
 # CONTRIBUTING
