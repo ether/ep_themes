@@ -1,119 +1,91 @@
-var themes = {
-  init() {
-    let theme = themes.getUrlVars().theme;
-    const font = themes.getUrlVars().font;
-    const bg = themes.getUrlVars().bg;
-    const toolbar = themes.getUrlVars().toolbar;
-    const sidebar = themes.getUrlVars().sidebar;
-    const sidebarBg = themes.getUrlVars().sidebarBg;
+'use strict';
 
+const bodyStyles = window.getComputedStyle(document.body);
+const normal = {};
+normal.lightcolor = bodyStyles.getPropertyValue('--light-color');
+normal.superdarkcolor = bodyStyles.getPropertyValue('--super-dark-color');
+normal.darkcolor = bodyStyles.getPropertyValue('--dark-color');
+normal.primarycolor = bodyStyles.getPropertyValue('--primary-color');
+normal.middlecolor = bodyStyles.getPropertyValue('--middle-color');
+normal.superlightcolor = bodyStyles.getPropertyValue('--super-light-color');
+normal.textcolor = bodyStyles.getPropertyValue('--text-color');
+
+const themes = {
+  change: () => {
+    themes.setThemeByName($('#themesmenu').val());
+  },
+  setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
+    document.body.style.setProperty('--light-color', light);
+    document.body.style.setProperty('--super-dark-color:', superDark);
+    document.body.style.setProperty('--dark-color', dark);
+    document.body.style.setProperty('--primary-color', primary);
+    document.body.style.setProperty('--middle-color', middle);
+    document.body.style.setProperty('--text-color', text);
+    document.body.style.setProperty('--super-light-color', superLight);
+    const $outerStyle = $('iframe[name="ace_outer"]').contents().find('body').get(0).style;
+    $outerStyle.setProperty('--super-light-color', superLight);
+    $outerStyle.setProperty('--super-dark-color', superDark);
+    $outerStyle.setProperty('--light-color', light);
+    $outerStyle.setProperty('--dark-color', dark);
+    // $outerStyle.setProperty('--scrollbar-bg', superDark);
+    // $outerStyle.setProperty('--scrollbar-bg', textcolor);
+    const $innerStyle = $('iframe[name="ace_outer"]').contents().find('iframe')
+        .contents().find('body').get(0).style;
+    $innerStyle.setProperty('--super-dark-color', superDark);
+  },
+  init: () => {
     const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+    let theme = themes.getUrlVars().theme;
 
     if (!theme) {
       /* Set theme from cookie if it exists */
       if (padcookie.getPref('themeName')) {
         theme = padcookie.getPref('themeName');
-      } else {
-        /* Set default theme if it exists */
-        if (clientVars.theme_default) {
-          theme = clientVars.theme_default;
-        }
+      }
+      /* Set default theme if it exists */
+      if (!theme && clientVars.theme_default) {
+        theme = clientVars.theme_default;
       }
     }
 
     /* Themes config -- add more themes here*/
     if (theme) {
-      if (theme == 'normal') {
-        themes.setBgColor('#FFF');
-        themes.setFontColor('#000');
-        themes.setToolbarColor('#F7F7F7');
-        themes.setSideBarBgColor('#F7F7F7');
-        themes.setSideBarFontColor('#888');
-      }
-      if (theme == 'highcontrast') {
-        themes.setBgColor('#000');
-        themes.setFontColor('#fff');
-        themes.setToolbarColor('#000');
-        themes.setSideBarBgColor('#000');
-        themes.setSideBarFontColor('#fff');
-      }
-      if (theme == 'hacker') {
-        themes.setBgColor('#000');
-        themes.setFontColor('#07C201');
-        themes.setToolbarColor('#000');
-        themes.setSideBarBgColor('#000');
-        themes.setSideBarFontColor('#07C201');
-      }
-      if (theme == 'terminal') {
-        themes.setBgColor('#000');
-        themes.setFontColor('#FFF');
-        themes.setToolbarColor('#000');
-        themes.setSideBarBgColor('#000');
-        themes.setSideBarFontColor('#FFF');
-      }
-      if (theme == 'cybergal') {
-        themes.setBgColor('#000');
-        themes.setFontColor('#FF1493');
-        themes.setToolbarColor('#000');
-        themes.setSideBarBgColor('#000');
-        themes.setSideBarFontColor('#FF1493');
-      }
-      if (theme == 'monokai') {
-        themes.setBgColor('#272822');
-        themes.setFontColor('#FFF');
-        themes.setToolbarColor('#272822');
-        themes.setSideBarBgColor('#272822');
-        themes.setSideBarFontColor('#FFF');
-      }
-      padcookie.setPref('themeName', theme);
-    }
-    if (font) {
-      themes.setFontColor(font);
-    }
-    if (bg) {
-      themes.setBgColor(bg);
-    }
-    if (toolbar) {
-      themes.setToolbarColor(toolbar);
-    }
-    if (sidebar) {
-      themes.setSideBarFontColor(sidebar);
-    }
-    if (sidebarBg) {
-      themes.setSideBarBgColor(sidebarBg);
+      themes.setThemeByName(theme);
     }
   },
-
-  setBgColor(color) {
-    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find('.innerdocbody').css('background-color', color);
-    $('iframe[name="ace_outer"]').contents().find('.outerdocbody').css('background-color', color);
-    $('.editorcontainer').css('background-color', color);
+  setThemeByName: (theme) => {
+    if (theme === 'normal') {
+      themes.setTheme(
+          normal.lightcolor,
+          normal.superdarkcolor,
+          normal.darkcolor,
+          normal.primarycolor,
+          normal.middlecolor,
+          normal.textcolor,
+          normal.superlightcolor
+      );
+    }
+    if (theme === 'highcontrast') {
+      themes.setTheme('#000', '#FFF', '#FFF', '#FFF', '#FFF', '#000', '#000');
+    }
+    if (theme === 'hacker') {
+      themes.setTheme('#000', '#07C201', '#07C201', '#07C201', '#07C201', '#000', '#000');
+    }
+    if (theme === 'terminal') {
+      themes.setTheme(
+          '#272822', '#07C201', '#07C201', '#07C201', '#07C201', '#272822', '#272822');
+    }
+    if (theme === 'cybergal') {
+      themes.setTheme('#000', '#FF1493', '#FF1493', '#FF1493', '#FF1493', '#000', '#000');
+    }
+    if (theme === 'monokai') {
+      themes.setTheme('#272822', '#FFF', '#FFF', '#FFF', '#FFF', '#272822', '#272822');
+    }
+    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+    padcookie.setPref('themeName', theme);
   },
-
-  setFontColor(color) {
-    $('iframe[name="ace_outer"]').contents().find('iframe').contents().find('.innerdocbody').css('color', color);
-    $('.buttonicon').css('color', color);
-    $('.toolbar ul li a').css('border-color', color);
-    $('.toolbar').css('border-bottom-color', color);
-  },
-
-  setToolbarColor(color) {
-    $('.toolbar ul li a').css('background', color);
-    $('.toolbar').css('background', color);
-    $('.toolbar').css('background-color', color);
-  },
-
-  setSideBarBgColor(color) {
-    $('iframe[name="ace_outer"]').contents().find('.sidediv').css('background', color);
-    $('iframe[name="ace_outer"]').contents().find('.sidediv').css('background-color', color);
-  },
-
-  setSideBarFontColor(color) {
-    $('iframe[name="ace_outer"]').contents().find('.sidedivinner').attr('style', `color: ${color} !important`);
-  },
-
   // Read a page's GET URL variables and return them as an associative array.
-  getUrlVars() {
+  getUrlVars: () => {
     const vars = []; let
       hash;
     const hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');

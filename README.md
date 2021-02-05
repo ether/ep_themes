@@ -1,4 +1,4 @@
-# Change the styling of a pad
+# Change the styling of a pad by clicking in Settings and selecting a style
 
 # Available Themes:
 
@@ -7,33 +7,33 @@
 * hacker
 * cybergal
 * monokai
+* ... Please add more! :)
 
-Available Params
+## Available URL Params
 ```
-theme     = Name of the theme IE hacker or terminal
-font      = Pad font color
-bg        = Pad Background Color 
-toolbar   = Toolbar Background color
-sidebar   = Sidebar font color
-sidebarBg = Sidebar Background color
+theme     = Name of the theme IE hacker or terminal IE ?theme=hacker
 ```
 
-# USAGE
+# Usage
 To use add the params to your Pad URL IE
 
-?theme=terminal
+``?theme=terminal``
 
 http://beta.etherpad.org/p/test?theme=terminal
 
-![Alt text](http://i.imgur.com/ktoSFGh.png)
+![Screenshot](https://user-images.githubusercontent.com/220864/107029089-61ebaf80-67a6-11eb-8802-382e7588a10f.PNG)
 
 # CONTRIBUTING
-See themes.js, use github.
+To add more themes send a pull request with your deisgns.  Examples for how to do this are in themes.js and it should be easy to test with
+```
+        themes.setTheme('#000', '#07C201', '#07C201', '#07C201', 
+'#07C201', '#000', '#000'); // replace with your colors :)
+```
 
 # INSTALL
 Install via the /admin/plugins UI in Etherpad Lite.
 
-Requires Etherpad lite >= version 1.2.5  
+Requires Etherpad lite >= version 1.7.6
 The following can optionally be added to your settings.json:  
 
     "ep_themes":{  

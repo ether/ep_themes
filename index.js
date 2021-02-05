@@ -1,17 +1,20 @@
+'use strict';
+
 const eejs = require('ep_etherpad-lite/node/eejs');
 const settings = require('ep_etherpad-lite/node/utils/Settings');
 
-exports.eejsBlock_scripts = function (hook_name, args, cb) {
-  args.content = `<script src="../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
-  return cb();
+exports.eejsBlock_scripts = (hookName, args, cb) => {
+  args.content = `
+      <script src="../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
+  cb();
 };
 
-exports.eejsBlock_mySettings_dropdowns = function (hook_name, args, cb) {
+exports.eejsBlock_mySettings_dropdowns = (hookName, args, cb) => {
   args.content += eejs.require('ep_themes/templates/themesMenu.ejs');
-  return cb();
+  cb();
 };
 
-exports.clientVars = function (hook, context, callback) {
+exports.clientVars = (hook, context, callback) => {
   let defaultTheme;
   try {
     if (settings.ep_themes.default_theme) {
@@ -21,5 +24,5 @@ exports.clientVars = function (hook, context, callback) {
     console.warn('ep_themes: a default theme can be set in settings.json');
     defaultTheme = '';
   }
-  return callback({theme_default: defaultTheme});
+  callback({theme_default: defaultTheme});
 };
