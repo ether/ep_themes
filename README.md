@@ -31,9 +31,9 @@ themes.setTheme('#000', '#07C201', '#07C201', '#07C201', '#07C201', '#000', '#00
 ```
 
 # INSTALL
-Install via the /admin/plugins UI in Etherpad Lite.
+Install via the /admin/plugins UI in Etherpad.
 
-Requires Etherpad lite >= version 1.7.6
+Requires Etherpad >= version 1.7.6
 The following can optionally be added to your settings.json:  
 
     "ep_themes":{  
