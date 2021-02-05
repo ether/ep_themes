@@ -13,6 +13,8 @@ normal.textcolor = bodyStyles.getPropertyValue('--text-color');
 const themes = {
   change: () => {
     themes.setThemeByName($('#themesmenu').val());
+    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
+    padcookie.setPref('themeName', $('#themesmenu').val());
   },
   setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
     document.body.style.setProperty('--light-color', light);
@@ -81,8 +83,9 @@ const themes = {
     if (theme === 'monokai') {
       themes.setTheme('#272822', '#FFF', '#FFF', '#FFF', '#FFF', '#272822', '#272822');
     }
-    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
-    padcookie.setPref('themeName', theme);
+    if (theme === 'unicorn') {
+      themes.setTheme('#8C1A6A', '#AAFFE5', '#5AFF15', '#A657AE', '#A657AE', '#9D75CB', '#8C1A6A');
+    }
   },
   // Read a page's GET URL variables and return them as an associative array.
   getUrlVars: () => {
