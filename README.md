@@ -26,8 +26,8 @@ http://beta.etherpad.org/p/test?theme=terminal
 # CONTRIBUTING
 To add more themes send a pull request with your deisgns.  Examples for how to do this are in themes.js and it should be easy to test with
 ```
-        themes.setTheme('#000', '#07C201', '#07C201', '#07C201', 
-'#07C201', '#000', '#000'); // replace with your colors :)
+themes.setTheme('#000', '#07C201', '#07C201', '#07C201', '#07C201', '#000', '#000');
+// replace with your colors :)
 ```
 
 # INSTALL
