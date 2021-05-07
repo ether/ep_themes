@@ -18,7 +18,7 @@ const themes = {
   },
   setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
     document.body.style.setProperty('--light-color', light);
-    document.body.style.setProperty('--super-dark-color:', superDark);
+    document.body.style.setProperty('--super-dark-color', superDark);
     document.body.style.setProperty('--dark-color', dark);
     document.body.style.setProperty('--primary-color', primary);
     document.body.style.setProperty('--middle-color', middle);
