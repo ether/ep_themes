@@ -88,6 +88,15 @@ const themes = {
     if (theme === 'unicorn') {
       themes.setTheme('#8C1A6A', '#AAFFE5', '#5AFF15', '#A657AE', '#A657AE', '#9D75CB', '#8C1A6A');
     }
+    if (theme === 'toothwhite') {
+      themes.setTheme('#FFF', '#000', '#000', '#000', '#000', '#FFF', '#FFF');
+    }
+    if (theme === 'yellow') {
+      themes.setTheme('#000', '#FFF000', '#FFF000', '#F00', '#FFF000', '#000', '#000');
+    }
+    if (theme === 'bloody') {
+      themes.setTheme('#000', '#F00', '#F00', '#F00', '#F00', '#000', '#000');
+    }
   },
   // Read a page's GET URL variables and return them as an associative array.
   getUrlVars: () => {
