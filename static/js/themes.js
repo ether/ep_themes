@@ -25,6 +25,7 @@ const themes = {
     document.body.style.setProperty('--text-color', text);
     document.body.style.setProperty('--super-light-color', superLight);
     const $outerStyle = $('iframe[name="ace_outer"]').contents().find('body').get(0).style;
+    $outerStyle.setProperty('--primary-color', primary);
     $outerStyle.setProperty('--super-light-color', superLight);
     $outerStyle.setProperty('--super-dark-color', superDark);
     $outerStyle.setProperty('--light-color', light);
@@ -34,6 +35,7 @@ const themes = {
     const $innerStyle = $('iframe[name="ace_outer"]').contents().find('iframe')
         .contents().find('body').get(0).style;
     $innerStyle.setProperty('--super-dark-color', superDark);
+    $innerStyle.setProperty('--primary-color', primary);
   },
   init: () => {
     const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
