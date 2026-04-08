@@ -1,6 +1,6 @@
 {
   "name": "ep_themes",
-  "version": "0.0.127",
+  "version": "11.0.0",
   "description": "Change the themes, styles & colors of different parts of Etherpad Lite",
   "author": {
     "name": "John McLear",
@@ -35,3 +35,4 @@
     "lint:fix": "eslint --fix ."
   }
 }
+
