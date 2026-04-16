@@ -66,32 +66,52 @@ const themes = {
     padPrefs.setPref('themeName', value);
   },
   setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
-    document.body.style.setProperty('--light-color', light);
-    document.body.style.setProperty('--super-dark-color', superDark);
-    document.body.style.setProperty('--dark-color', dark);
-    document.body.style.setProperty('--primary-color', primary);
-    document.body.style.setProperty('--middle-color', middle);
-    document.body.style.setProperty('--text-color', text);
-    document.body.style.setProperty('--super-light-color', superLight);
-    // The pad page nests the editor in two iframes (ace_outer > ace_inner)
-    // and we need to apply the colour vars in each so styled regions inside
-    // the editor pick them up. Timeslider has no iframes at all — render
-    // happens directly in the body — so guard each access.
-    const outerBody = $('iframe[name="ace_outer"]').contents().find('body').get(0);
-    if (outerBody) {
-      const $outerStyle = outerBody.style;
-      $outerStyle.setProperty('--primary-color', primary);
-      $outerStyle.setProperty('--super-light-color', superLight);
-      $outerStyle.setProperty('--super-dark-color', superDark);
-      $outerStyle.setProperty('--light-color', light);
-      $outerStyle.setProperty('--dark-color', dark);
-    }
-    const innerBody = $('iframe[name="ace_outer"]').contents().find('iframe')
-        .contents().find('body').get(0);
-    if (innerBody) {
-      const $innerStyle = innerBody.style;
-      $innerStyle.setProperty('--super-dark-color', superDark);
-      $innerStyle.setProperty('--primary-color', primary);
+    // Set the seven base colour vars on both <html> and <body>. <html> is
+    // important because the colibris skin's derived vars (--bg-color,
+    // --border-color, --text-soft-color, ...) live on selectors scoped to
+    // the <html> element (e.g. `.light-background`), and CSS variables
+    // don't propagate from <body> upward to <html>. Without setting them
+    // on <html> the timeslider stays in the default colibris colours.
+    const setBase = (style) => {
+      style.setProperty('--light-color', light);
+      style.setProperty('--super-dark-color', superDark);
+      style.setProperty('--dark-color', dark);
+      style.setProperty('--primary-color', primary);
+      style.setProperty('--middle-color', middle);
+      style.setProperty('--text-color', text);
+      style.setProperty('--super-light-color', superLight);
+    };
+    setBase(document.documentElement.style);
+    setBase(document.body.style);
+
+    // Pad page only: also re-apply inside the ace iframes. We set fewer vars
+    // on the iframes than on the top-level page on purpose — the cascade
+    // inside each iframe derives `--text-color` from `--super-dark-color`
+    // (via the `.light-background` rule on its own <html>), so explicitly
+    // setting `--text-color` to the `text` argument here would *override*
+    // that derivation and turn the editor text the wrong colour. Same for
+    // `--middle-color`. Stick to the colours that the iframe CSS reads
+    // directly.
+    const setIframeBase = (style) => {
+      style.setProperty('--primary-color', primary);
+      style.setProperty('--super-light-color', superLight);
+      style.setProperty('--super-dark-color', superDark);
+      style.setProperty('--light-color', light);
+      style.setProperty('--dark-color', dark);
+    };
+    const outerDoc = (() => {
+      const f = document.querySelector('iframe[name="ace_outer"]');
+      return f && f.contentDocument;
+    })();
+    if (outerDoc) {
+      setIframeBase(outerDoc.documentElement.style);
+      if (outerDoc.body) setIframeBase(outerDoc.body.style);
+      const innerFrame = outerDoc.querySelector('iframe');
+      const innerDoc = innerFrame && innerFrame.contentDocument;
+      if (innerDoc) {
+        setIframeBase(innerDoc.documentElement.style);
+        if (innerDoc.body) setIframeBase(innerDoc.body.style);
+      }
     }
   },
   init: () => {
