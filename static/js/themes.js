@@ -134,7 +134,41 @@ const themes = {
       themes.setThemeByName(theme);
     }
   },
+  // The colibris skin's `.light-background` and `.dark-background` rules
+  // resolve --bg-color / --text-color etc. differently. Etherpad core
+  // auto-flips the html classes between these on the pad page when the OS
+  // prefers dark mode (see pad.ts:497), but it doesn't do the same for the
+  // timeslider — and any theme the user picks via this plugin is "dark"
+  // unless it's `normal` or `toothwhite`. To make both pages render the
+  // same look, the plugin syncs the html skin-variant classes to the theme.
+  syncSkinClasses: (theme) => {
+    const lightThemes = new Set(['normal', 'toothwhite']);
+    const isLight = lightThemes.has(theme);
+    const flip = (root) => {
+      const cl = root.classList;
+      const remove = isLight
+        ? ['super-dark-toolbar', 'super-dark-editor', 'dark-background']
+        : ['super-light-toolbar', 'super-light-editor', 'light-background'];
+      const add = isLight
+        ? ['super-light-toolbar', 'super-light-editor', 'light-background']
+        : ['super-dark-toolbar', 'super-dark-editor', 'dark-background'];
+      remove.forEach((c) => cl.remove(c));
+      add.forEach((c) => cl.add(c));
+    };
+    flip(document.documentElement);
+    const outerDoc = (() => {
+      const f = document.querySelector('iframe[name="ace_outer"]');
+      return f && f.contentDocument;
+    })();
+    if (outerDoc) {
+      flip(outerDoc.documentElement);
+      const innerFrame = outerDoc.querySelector('iframe');
+      const innerDoc = innerFrame && innerFrame.contentDocument;
+      if (innerDoc) flip(innerDoc.documentElement);
+    }
+  },
   setThemeByName: (theme) => {
+    themes.syncSkinClasses(theme);
     if (theme === 'normal') {
       const n = captureNormal();
       if (!n) return;
