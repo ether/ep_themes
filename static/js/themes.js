@@ -144,16 +144,17 @@ const themes = {
   syncSkinClasses: (theme) => {
     const lightThemes = new Set(['normal', 'toothwhite']);
     const isLight = lightThemes.has(theme);
+    // Only flip the `-background` class. Touching `-toolbar` / `-editor` too
+    // makes the colibris toolbar rules resolve --bg-color to the theme's
+    // accent colour, which on themes like Terminal makes the toolbar
+    // background and the toolbar buttons the same green, so the user can't
+    // see their controls. Leaving the toolbar/editor classes alone keeps
+    // the toolbar in its default neutral look while the editor area below
+    // still picks up the theme.
     const flip = (root) => {
       const cl = root.classList;
-      const remove = isLight
-        ? ['super-dark-toolbar', 'super-dark-editor', 'dark-background']
-        : ['super-light-toolbar', 'super-light-editor', 'light-background'];
-      const add = isLight
-        ? ['super-light-toolbar', 'super-light-editor', 'light-background']
-        : ['super-dark-toolbar', 'super-dark-editor', 'dark-background'];
-      remove.forEach((c) => cl.remove(c));
-      add.forEach((c) => cl.add(c));
+      cl.remove(isLight ? 'dark-background' : 'light-background');
+      cl.add(isLight ? 'light-background' : 'dark-background');
     };
     flip(document.documentElement);
     const outerDoc = (() => {
