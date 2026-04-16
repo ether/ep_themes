@@ -38,15 +38,26 @@ const padPrefs = {
   },
 };
 
-const bodyStyles = window.getComputedStyle(document.body);
-const normal = {};
-normal.lightcolor = bodyStyles.getPropertyValue('--light-color');
-normal.superdarkcolor = bodyStyles.getPropertyValue('--super-dark-color');
-normal.darkcolor = bodyStyles.getPropertyValue('--dark-color');
-normal.primarycolor = bodyStyles.getPropertyValue('--primary-color');
-normal.middlecolor = bodyStyles.getPropertyValue('--middle-color');
-normal.superlightcolor = bodyStyles.getPropertyValue('--super-light-color');
-normal.textcolor = bodyStyles.getPropertyValue('--text-color');
+// Captured lazily on first read so that loading themes.js from a <head>
+// script (the timeslider page does this) doesn't crash on a missing
+// document.body. The plugin's hooks fire after the editor is ready, so by
+// the time we actually need these values the body exists.
+let normal = null;
+const captureNormal = () => {
+  if (normal) return normal;
+  if (!document.body) return null;
+  const bodyStyles = window.getComputedStyle(document.body);
+  normal = {
+    lightcolor: bodyStyles.getPropertyValue('--light-color'),
+    superdarkcolor: bodyStyles.getPropertyValue('--super-dark-color'),
+    darkcolor: bodyStyles.getPropertyValue('--dark-color'),
+    primarycolor: bodyStyles.getPropertyValue('--primary-color'),
+    middlecolor: bodyStyles.getPropertyValue('--middle-color'),
+    superlightcolor: bodyStyles.getPropertyValue('--super-light-color'),
+    textcolor: bodyStyles.getPropertyValue('--text-color'),
+  };
+  return normal;
+};
 
 const themes = {
   change: () => {
@@ -62,16 +73,26 @@ const themes = {
     document.body.style.setProperty('--middle-color', middle);
     document.body.style.setProperty('--text-color', text);
     document.body.style.setProperty('--super-light-color', superLight);
-    const $outerStyle = $('iframe[name="ace_outer"]').contents().find('body').get(0).style;
-    $outerStyle.setProperty('--primary-color', primary);
-    $outerStyle.setProperty('--super-light-color', superLight);
-    $outerStyle.setProperty('--super-dark-color', superDark);
-    $outerStyle.setProperty('--light-color', light);
-    $outerStyle.setProperty('--dark-color', dark);
-    const $innerStyle = $('iframe[name="ace_outer"]').contents().find('iframe')
-        .contents().find('body').get(0).style;
-    $innerStyle.setProperty('--super-dark-color', superDark);
-    $innerStyle.setProperty('--primary-color', primary);
+    // The pad page nests the editor in two iframes (ace_outer > ace_inner)
+    // and we need to apply the colour vars in each so styled regions inside
+    // the editor pick them up. Timeslider has no iframes at all — render
+    // happens directly in the body — so guard each access.
+    const outerBody = $('iframe[name="ace_outer"]').contents().find('body').get(0);
+    if (outerBody) {
+      const $outerStyle = outerBody.style;
+      $outerStyle.setProperty('--primary-color', primary);
+      $outerStyle.setProperty('--super-light-color', superLight);
+      $outerStyle.setProperty('--super-dark-color', superDark);
+      $outerStyle.setProperty('--light-color', light);
+      $outerStyle.setProperty('--dark-color', dark);
+    }
+    const innerBody = $('iframe[name="ace_outer"]').contents().find('iframe')
+        .contents().find('body').get(0);
+    if (innerBody) {
+      const $innerStyle = innerBody.style;
+      $innerStyle.setProperty('--super-dark-color', superDark);
+      $innerStyle.setProperty('--primary-color', primary);
+    }
   },
   init: () => {
     let theme = themes.getUrlVars().theme;
@@ -95,14 +116,16 @@ const themes = {
   },
   setThemeByName: (theme) => {
     if (theme === 'normal') {
+      const n = captureNormal();
+      if (!n) return;
       themes.setTheme(
-          normal.lightcolor,
-          normal.superdarkcolor,
-          normal.darkcolor,
-          normal.primarycolor,
-          normal.middlecolor,
-          normal.textcolor,
-          normal.superlightcolor
+          n.lightcolor,
+          n.superdarkcolor,
+          n.darkcolor,
+          n.primarycolor,
+          n.middlecolor,
+          n.textcolor,
+          n.superlightcolor
       );
     }
     if (theme === 'highcontrast') {
@@ -147,3 +170,37 @@ const themes = {
     return vars;
   },
 };
+
+// In Etherpad 2.x the client_hooks dispatch path is broken (it uses a
+// dynamic require which the bundled output doesn't support), so the
+// aceInitialized / postTimesliderInit hooks in init.js never fire. We
+// instead self-init from this script: wait until the DOM is ready, then
+// for the regular pad, also wait until the editor iframes are mounted so
+// setTheme has somewhere to apply the inner colour vars.
+const themesAutoInit = () => {
+  // Timeslider page has no ace_outer iframe — just init immediately.
+  if (!document.querySelector('iframe[name="ace_outer"]')) {
+    themes.init();
+    return;
+  }
+  // Pad page — wait for the inner editor iframe to be loaded so the
+  // outer/inner CSS-var assignments in setTheme actually land.
+  let attempts = 0;
+  const tick = () => {
+    const outer = document.querySelector('iframe[name="ace_outer"]');
+    const inner = outer && outer.contentDocument &&
+        outer.contentDocument.querySelector('iframe');
+    const innerBody = inner && inner.contentDocument && inner.contentDocument.body;
+    if (innerBody || attempts++ > 100) {
+      themes.init();
+      return;
+    }
+    setTimeout(tick, 100);
+  };
+  tick();
+};
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', themesAutoInit);
+} else {
+  themesAutoInit();
+}
