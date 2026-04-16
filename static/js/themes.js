@@ -1,5 +1,43 @@
 'use strict';
 
+// Read/write the same cookie that ep_etherpad-lite's pad_cookie module manages.
+// We can't `require('ep_etherpad-lite/static/js/pad_cookie')` from the plugin
+// any more — Etherpad 2.x bundles its frontend with esbuild and no longer
+// exposes a global `require()` in the page. So we talk to the cookie directly
+// using the same name and JSON encoding that pad_cookie uses, which keeps the
+// theme preference in sync with the rest of Etherpad's per-pad prefs.
+const padPrefs = {
+  cookieName_: () => {
+    const prefix = (window.clientVars && window.clientVars.cookiePrefix) || '';
+    return prefix + (window.location.protocol === 'https:' ? 'prefs' : 'prefsHttp');
+  },
+  read_: () => {
+    try {
+      const name = padPrefs.cookieName_();
+      const raw = (document.cookie || '').split('; ')
+          .find((row) => row.startsWith(`${name}=`));
+      if (!raw) return {};
+      const json = decodeURIComponent(raw.slice(name.length + 1));
+      return JSON.parse(json) || {};
+    } catch (e) {
+      return {};
+    }
+  },
+  write_: (prefs) => {
+    const name = padPrefs.cookieName_();
+    const value = encodeURIComponent(JSON.stringify(prefs));
+    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+    const secure = window.location.protocol === 'https:' ? '; secure' : '';
+    document.cookie = `${name}=${value}; expires=${expires}; path=/; samesite=lax${secure}`;
+  },
+  getPref: (key) => padPrefs.read_()[key],
+  setPref: (key, value) => {
+    const prefs = padPrefs.read_();
+    prefs[key] = value;
+    padPrefs.write_(prefs);
+  },
+};
+
 const bodyStyles = window.getComputedStyle(document.body);
 const normal = {};
 normal.lightcolor = bodyStyles.getPropertyValue('--light-color');
@@ -12,9 +50,9 @@ normal.textcolor = bodyStyles.getPropertyValue('--text-color');
 
 const themes = {
   change: () => {
-    themes.setThemeByName($('#themesmenu').val());
-    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
-    padcookie.setPref('themeName', $('#themesmenu').val());
+    const value = $('#themesmenu').val();
+    themes.setThemeByName(value);
+    padPrefs.setPref('themeName', value);
   },
   setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
     document.body.style.setProperty('--light-color', light);
@@ -30,25 +68,23 @@ const themes = {
     $outerStyle.setProperty('--super-dark-color', superDark);
     $outerStyle.setProperty('--light-color', light);
     $outerStyle.setProperty('--dark-color', dark);
-    // $outerStyle.setProperty('--scrollbar-bg', superDark);
-    // $outerStyle.setProperty('--scrollbar-bg', textcolor);
     const $innerStyle = $('iframe[name="ace_outer"]').contents().find('iframe')
         .contents().find('body').get(0).style;
     $innerStyle.setProperty('--super-dark-color', superDark);
     $innerStyle.setProperty('--primary-color', primary);
   },
   init: () => {
-    const padcookie = require('ep_etherpad-lite/static/js/pad_cookie').padcookie;
     let theme = themes.getUrlVars().theme;
 
     if (!theme) {
       /* Set theme from cookie if it exists */
-      if (padcookie.getPref('themeName')) {
-        theme = padcookie.getPref('themeName');
+      const stored = padPrefs.getPref('themeName');
+      if (stored) {
+        theme = stored;
       }
       /* Set default theme if it exists */
-      if (!theme && clientVars.theme_default) {
-        theme = clientVars.theme_default;
+      if (!theme && window.clientVars && window.clientVars.theme_default) {
+        theme = window.clientVars.theme_default;
       }
     }
 
