@@ -38,15 +38,26 @@ const padPrefs = {
   },
 };
 
-const bodyStyles = window.getComputedStyle(document.body);
-const normal = {};
-normal.lightcolor = bodyStyles.getPropertyValue('--light-color');
-normal.superdarkcolor = bodyStyles.getPropertyValue('--super-dark-color');
-normal.darkcolor = bodyStyles.getPropertyValue('--dark-color');
-normal.primarycolor = bodyStyles.getPropertyValue('--primary-color');
-normal.middlecolor = bodyStyles.getPropertyValue('--middle-color');
-normal.superlightcolor = bodyStyles.getPropertyValue('--super-light-color');
-normal.textcolor = bodyStyles.getPropertyValue('--text-color');
+// Captured lazily on first read so that loading themes.js from a <head>
+// script (the timeslider page does this) doesn't crash on a missing
+// document.body. The plugin's hooks fire after the editor is ready, so by
+// the time we actually need these values the body exists.
+let normal = null;
+const captureNormal = () => {
+  if (normal) return normal;
+  if (!document.body) return null;
+  const bodyStyles = window.getComputedStyle(document.body);
+  normal = {
+    lightcolor: bodyStyles.getPropertyValue('--light-color'),
+    superdarkcolor: bodyStyles.getPropertyValue('--super-dark-color'),
+    darkcolor: bodyStyles.getPropertyValue('--dark-color'),
+    primarycolor: bodyStyles.getPropertyValue('--primary-color'),
+    middlecolor: bodyStyles.getPropertyValue('--middle-color'),
+    superlightcolor: bodyStyles.getPropertyValue('--super-light-color'),
+    textcolor: bodyStyles.getPropertyValue('--text-color'),
+  };
+  return normal;
+};
 
 const themes = {
   change: () => {
@@ -55,23 +66,53 @@ const themes = {
     padPrefs.setPref('themeName', value);
   },
   setTheme: (light, superDark, dark, primary, middle, text, superLight) => {
-    document.body.style.setProperty('--light-color', light);
-    document.body.style.setProperty('--super-dark-color', superDark);
-    document.body.style.setProperty('--dark-color', dark);
-    document.body.style.setProperty('--primary-color', primary);
-    document.body.style.setProperty('--middle-color', middle);
-    document.body.style.setProperty('--text-color', text);
-    document.body.style.setProperty('--super-light-color', superLight);
-    const $outerStyle = $('iframe[name="ace_outer"]').contents().find('body').get(0).style;
-    $outerStyle.setProperty('--primary-color', primary);
-    $outerStyle.setProperty('--super-light-color', superLight);
-    $outerStyle.setProperty('--super-dark-color', superDark);
-    $outerStyle.setProperty('--light-color', light);
-    $outerStyle.setProperty('--dark-color', dark);
-    const $innerStyle = $('iframe[name="ace_outer"]').contents().find('iframe')
-        .contents().find('body').get(0).style;
-    $innerStyle.setProperty('--super-dark-color', superDark);
-    $innerStyle.setProperty('--primary-color', primary);
+    // Set the seven base colour vars on both <html> and <body>. <html> is
+    // important because the colibris skin's derived vars (--bg-color,
+    // --border-color, --text-soft-color, ...) live on selectors scoped to
+    // the <html> element (e.g. `.light-background`), and CSS variables
+    // don't propagate from <body> upward to <html>. Without setting them
+    // on <html> the timeslider stays in the default colibris colours.
+    const setBase = (style) => {
+      style.setProperty('--light-color', light);
+      style.setProperty('--super-dark-color', superDark);
+      style.setProperty('--dark-color', dark);
+      style.setProperty('--primary-color', primary);
+      style.setProperty('--middle-color', middle);
+      style.setProperty('--text-color', text);
+      style.setProperty('--super-light-color', superLight);
+    };
+    setBase(document.documentElement.style);
+    setBase(document.body.style);
+
+    // Pad page only: also re-apply inside the ace iframes. We set fewer vars
+    // on the iframes than on the top-level page on purpose — the cascade
+    // inside each iframe derives `--text-color` from `--super-dark-color`
+    // (via the `.light-background` rule on its own <html>), so explicitly
+    // setting `--text-color` to the `text` argument here would *override*
+    // that derivation and turn the editor text the wrong colour. Same for
+    // `--middle-color`. Stick to the colours that the iframe CSS reads
+    // directly.
+    const setIframeBase = (style) => {
+      style.setProperty('--primary-color', primary);
+      style.setProperty('--super-light-color', superLight);
+      style.setProperty('--super-dark-color', superDark);
+      style.setProperty('--light-color', light);
+      style.setProperty('--dark-color', dark);
+    };
+    const outerDoc = (() => {
+      const f = document.querySelector('iframe[name="ace_outer"]');
+      return f && f.contentDocument;
+    })();
+    if (outerDoc) {
+      setIframeBase(outerDoc.documentElement.style);
+      if (outerDoc.body) setIframeBase(outerDoc.body.style);
+      const innerFrame = outerDoc.querySelector('iframe');
+      const innerDoc = innerFrame && innerFrame.contentDocument;
+      if (innerDoc) {
+        setIframeBase(innerDoc.documentElement.style);
+        if (innerDoc.body) setIframeBase(innerDoc.body.style);
+      }
+    }
   },
   init: () => {
     let theme = themes.getUrlVars().theme;
@@ -93,16 +134,53 @@ const themes = {
       themes.setThemeByName(theme);
     }
   },
+  // The colibris skin's `.light-background` and `.dark-background` rules
+  // resolve --bg-color / --text-color etc. differently. Etherpad core
+  // auto-flips the html classes between these on the pad page when the OS
+  // prefers dark mode (see pad.ts:497), but it doesn't do the same for the
+  // timeslider — and any theme the user picks via this plugin is "dark"
+  // unless it's `normal` or `toothwhite`. To make both pages render the
+  // same look, the plugin syncs the html skin-variant classes to the theme.
+  syncSkinClasses: (theme) => {
+    const lightThemes = new Set(['normal', 'toothwhite']);
+    const isLight = lightThemes.has(theme);
+    // Only flip the `-background` class. Touching `-toolbar` / `-editor` too
+    // makes the colibris toolbar rules resolve --bg-color to the theme's
+    // accent colour, which on themes like Terminal makes the toolbar
+    // background and the toolbar buttons the same green, so the user can't
+    // see their controls. Leaving the toolbar/editor classes alone keeps
+    // the toolbar in its default neutral look while the editor area below
+    // still picks up the theme.
+    const flip = (root) => {
+      const cl = root.classList;
+      cl.remove(isLight ? 'dark-background' : 'light-background');
+      cl.add(isLight ? 'light-background' : 'dark-background');
+    };
+    flip(document.documentElement);
+    const outerDoc = (() => {
+      const f = document.querySelector('iframe[name="ace_outer"]');
+      return f && f.contentDocument;
+    })();
+    if (outerDoc) {
+      flip(outerDoc.documentElement);
+      const innerFrame = outerDoc.querySelector('iframe');
+      const innerDoc = innerFrame && innerFrame.contentDocument;
+      if (innerDoc) flip(innerDoc.documentElement);
+    }
+  },
   setThemeByName: (theme) => {
+    themes.syncSkinClasses(theme);
     if (theme === 'normal') {
+      const n = captureNormal();
+      if (!n) return;
       themes.setTheme(
-          normal.lightcolor,
-          normal.superdarkcolor,
-          normal.darkcolor,
-          normal.primarycolor,
-          normal.middlecolor,
-          normal.textcolor,
-          normal.superlightcolor
+          n.lightcolor,
+          n.superdarkcolor,
+          n.darkcolor,
+          n.primarycolor,
+          n.middlecolor,
+          n.textcolor,
+          n.superlightcolor
       );
     }
     if (theme === 'highcontrast') {
@@ -147,3 +225,37 @@ const themes = {
     return vars;
   },
 };
+
+// In Etherpad 2.x the client_hooks dispatch path is broken (it uses a
+// dynamic require which the bundled output doesn't support), so the
+// aceInitialized / postTimesliderInit hooks in init.js never fire. We
+// instead self-init from this script: wait until the DOM is ready, then
+// for the regular pad, also wait until the editor iframes are mounted so
+// setTheme has somewhere to apply the inner colour vars.
+const themesAutoInit = () => {
+  // Timeslider page has no ace_outer iframe — just init immediately.
+  if (!document.querySelector('iframe[name="ace_outer"]')) {
+    themes.init();
+    return;
+  }
+  // Pad page — wait for the inner editor iframe to be loaded so the
+  // outer/inner CSS-var assignments in setTheme actually land.
+  let attempts = 0;
+  const tick = () => {
+    const outer = document.querySelector('iframe[name="ace_outer"]');
+    const inner = outer && outer.contentDocument &&
+        outer.contentDocument.querySelector('iframe');
+    const innerBody = inner && inner.contentDocument && inner.contentDocument.body;
+    if (innerBody || attempts++ > 100) {
+      themes.init();
+      return;
+    }
+    setTimeout(tick, 100);
+  };
+  tick();
+};
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', themesAutoInit);
+} else {
+  themesAutoInit();
+}

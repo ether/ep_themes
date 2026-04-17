@@ -9,6 +9,15 @@ exports.eejsBlock_scripts = (hookName, args, cb) => {
   cb();
 };
 
+// Inject the same script into the timeslider page so themes apply there too.
+// Without this, /p/foo/timeslider always renders with the default theme even
+// if the pad is set to (and persists) a different one (issue #68).
+exports.eejsBlock_timesliderScripts = (hookName, args, cb) => {
+  args.content = `
+      <script src="../../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
+  cb();
+};
+
 exports.eejsBlock_mySettings_dropdowns = (hookName, args, cb) => {
   args.content += eejs.require('ep_themes/templates/themesMenu.ejs');
   cb();
