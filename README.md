@@ -1,4 +1,4 @@
-![Publish Status](https://github.com/ether/ep_themes/workflows/Node.js%20Package/badge.svg) [![Backend Tests Status](https://github.com/ether/ep_themes/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/ether/ep_themes/actions/workflows/test-and-release.yml)
+![Demo](demo.gif) [![Backend Tests Status](https://github.com/ether/ep_themes/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/ether/ep_themes/actions/workflows/test-and-release.yml)
 
 # Change the styling of a pad by clicking in Settings and selecting a style
 
