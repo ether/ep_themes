@@ -4,8 +4,13 @@ const eejs = require('ep_etherpad-lite/node/eejs');
 const settings = require('ep_etherpad-lite/node/utils/Settings');
 
 exports.eejsBlock_scripts = (hookName, args, cb) => {
+  // `defer` so the script runs after the DOM has been parsed — themes.js
+  // reads `document.body` at its top level, and without `defer` that's
+  // `null` (scripts in <head> execute synchronously before <body> is
+  // constructed), which threw `TypeError: Cannot read properties of null`
+  // and prevented the pad editor iframe from ever initialising. See #93.
   args.content = `
-      <script src="../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
+      <script defer src="../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
   cb();
 };
 
@@ -14,7 +19,7 @@ exports.eejsBlock_scripts = (hookName, args, cb) => {
 // if the pad is set to (and persists) a different one (issue #68).
 exports.eejsBlock_timesliderScripts = (hookName, args, cb) => {
   args.content = `
-      <script src="../../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
+      <script defer src="../../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
   cb();
 };
 
