@@ -33,5 +33,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
+  },
+  "dependencies": {
+    "ep_plugin_helpers": "^0.5.0"
   }
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-const eejs = require('ep_etherpad-lite/node/eejs');
+const {template} = require('ep_plugin_helpers');
 const settings = require('ep_etherpad-lite/node/utils/Settings');
 
 exports.eejsBlock_scripts = (hookName, args, cb) => {
@@ -23,10 +23,8 @@ exports.eejsBlock_timesliderScripts = (hookName, args, cb) => {
   cb();
 };
 
-exports.eejsBlock_mySettings_dropdowns = (hookName, args, cb) => {
-  args.content += eejs.require('ep_themes/templates/themesMenu.ejs');
-  cb();
-};
+exports.eejsBlock_mySettings_dropdowns =
+    template('ep_themes/templates/themesMenu.ejs');
 
 exports.clientVars = (hook, context, callback) => {
   let defaultTheme;
