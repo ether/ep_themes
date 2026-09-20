@@ -18,8 +18,9 @@ exports.eejsBlock_scripts = (hookName, args, cb) => {
 // Without this, /p/foo/timeslider always renders with the default theme even
 // if the pad is set to (and persists) a different one (issue #68).
 exports.eejsBlock_timesliderScripts = (hookName, args, cb) => {
+  const src = '../../static/plugins/ep_themes/static/js/themes.js';
   args.content = `
-      <script defer src="../../static/plugins/ep_themes/static/js/themes.js"></script>${args.content}`;
+      <script defer src="${src}"></script>${args.content}`;
   cb();
 };
 
